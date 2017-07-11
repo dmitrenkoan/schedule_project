@@ -1,0 +1,87 @@
+.suggestionsBox {
+    position: absolute;
+    z-index: 99999;
+    margin: 70px 0px 0px 0px;
+    max-width: 555px;
+    background-color: #10cfbd;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border: 2px solid #7d7b7b;
+    color: #fff;
+}
+
+.suggestionList {
+    margin: 0px;
+    padding: 0px;
+}
+
+.suggestionList ul{
+    padding: 0px 10px;
+    list-style-type: none;
+}
+
+.suggestionList ul li {
+    margin: 0px 0px 3px 0px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.suggestionList ul li:hover {
+    background-color: #659CD8;
+}
+
+.suggestionList .noResult {
+    padding: 0px 10px;
+}
+
+.components-Form-FormField___self___10VZD .inventory-group-title{
+    text-align: center;
+    font-family: "Montserrat";
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.components-Input-Input___self___2cl9W .delete_item {
+    padding-top: 5px;
+    text-align: center;
+}
+.components-Input-Input___self___2cl9W .delete_item .del-item {
+    cursor: pointer;
+}
+.components-Input-Input___self___2cl9W .components-Input-Input___container___2dCSs .add-more-inventory {
+    cursor: pointer;
+}
+.event-buttons .accept {
+    background-color: #10cfbd;
+    border: 1px solid #10cfbd;
+}
+.event-buttons .cancel{
+    margin-left: 5px;
+    background: #c64643;
+    border: 1px solid #c64643;
+}
+
+.row .margin-bottom {
+    margin-bottom: 70px;
+}
+.row .padding-left {
+    padding-left: 30px;
+}
+.components-Calendar-components-Toolbar-Toolbar___row___1XRXG .components-Form-FormField___self___10VZD {
+    padding-left:15px;
+}
+.row .components-Calendar-components-Toolbar-Toolbar___row___1XRXG{
+    max-width:100%;
+}
+.clickable-row.AC td{
+    background-color: rgba(145, 255, 154, 0.66);
+}
+.clickable-row.CA td{
+    background-color: rgba(255, 132, 132, 0.66);
+}
+.clickable-row.WA td{
+    background-color: rgba(161, 161, 249, 0.66);
+}
+
+
