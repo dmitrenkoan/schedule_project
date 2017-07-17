@@ -14,6 +14,7 @@ use App\staffSalary;
 use App\ServiceInventoryModel;
 use App\StaffInventory;
 use \stdClass;
+use Validator;
 
 
 
@@ -73,7 +74,6 @@ class CalendarController extends Controller
         //dd($arJSEventsData);
         $arJSData['events_data'] = json_encode($arJSEventsData);
 
-        //dd($arJSData);
         return view('layouts.calendar', [
             'arMainMenu' => $arMainMenu,
             'pageParam' => 'calendar',
@@ -98,52 +98,76 @@ class CalendarController extends Controller
     public function addEvent(Request $request) {
         $obCalendar = new CalendarModel();
         $curUser = Auth::user()->toArray();
-        if(!empty($request->client_name)) {
-            $obClient = DB::table('clients')->where('name', $request->client_name)->first();
-            $clientID = $obClient->id;
-        }
-        elseif (!empty($request->new_client_name)) {
-            $obClients = new Clients();
-            $obClients->name = $request->new_client_name;
-            $obClients->phone = $request->new_client_phone;
-            $obClients->salons_id = $curUser['salon_id'];
-            if($obClients->save()) {
-                $clientID = $obClients->id;
+        if($this->validateCalendarData($request->all())) {
+            if(!empty($request->client_name)) {
+                $obClient = DB::table('clients')->where('name', $request->client_name)->first();
+                $clientID = $obClient->id;
             }
+            elseif (!empty($request->new_client_name)) {
+                $obClients = new Clients();
+                $obClients->name = $request->new_client_name;
+                $obClients->phone = $request->new_client_phone;
+                $obClients->salons_id = $curUser['salon_id'];
+                if($obClients->save()) {
+                    $clientID = $obClients->id;
+                }
+            }
+            if(!empty($clientID)) {
+                $obCalendar->clients_id = $clientID;
+            }
+            if(!empty($request->calendar_note)) {
+                $obCalendar->note = $request->calendar_note;
+            }
+            if(!empty($request->date) && !empty($request->time_begin)) {
+                $obDateBegin = new DateTime($request->date.' '.$request->time_begin);
+                $obCalendar->date_time_begin = $obDateBegin->format("Y-m-d H:i:s");
+                $obEndDateTime = $obDateBegin->add(new DateInterval('PT'.$request->service_duration.'M'));
+                $obCalendar->date_time_end = $obEndDateTime->format("Y-m-d H:i:s");
+            }
+            if(!empty($request->service_name)) {
+                $obService = DB::table('services')->where('name', $request->service_name)->where('staff_id', $request->staff_id)->first();
+                $obCalendar->services_id = $obService->id;
+            }
+            $obCalendar->salons_id = $curUser['salon_id'];
+
+            $obCalendar->staff_id = $request->staff_id;
+
+            $obCalendar->status = 'WA';
+
+            $obCalendar->save();
+
+            $arButtonsHtml = $this->createHtmlButtons($obCalendar);
+
+            $arResult['title'] = $obService->name;
+            $arResult['start'] = $obCalendar->date_time_begin;
+            $arResult['end'] = $obCalendar->date_time_end;
+            $arResult['backgroundColor'] = $arButtonsHtml['backgroundColor'];
+            $arResult['advHTML'] = $arButtonsHtml['buttonsHtml'];
+
+            return json_encode($arResult);
         }
-        if(!empty($clientID)) {
-            $obCalendar->clients_id = $clientID;
+        else {
+            return false;
         }
-        if(!empty($request->calendar_note)) {
-            $obCalendar->note = $request->calendar_note;
+
+    }
+
+    public function validateCalendarData($arData) {
+        //dd($arData);
+        $v = Validator::make($arData,
+          array(
+              "service_name" => "exists:services,name",
+              "new_client_name" => "required_without:client_name",
+              "client_name" => "required_without:new_client_name",
+          )
+        );
+        if($v->fails()) {
+            dd($v->errors());
+            return false;
         }
-        if(!empty($request->date) && !empty($request->time_begin)) {
-            $obDateBegin = new DateTime($request->date.' '.$request->time_begin);
-            $obCalendar->date_time_begin = $obDateBegin->format("Y-m-d H:i:s");
-            $obEndDateTime = $obDateBegin->add(new DateInterval('PT'.$request->service_duration.'M'));
-            $obCalendar->date_time_end = $obEndDateTime->format("Y-m-d H:i:s");
+        else {
+            return true;
         }
-        if(!empty($request->service_name)) {
-            $obService = DB::table('services')->where('name', $request->service_name)->where('staff_id', $request->staff_id)->first();
-            $obCalendar->services_id = $obService->id;
-        }
-        $obCalendar->salons_id = $curUser['salon_id'];
-
-        $obCalendar->staff_id = $request->staff_id;
-
-        $obCalendar->status = 'WA';
-
-        $obCalendar->save();
-
-        $arButtonsHtml = $this->createHtmlButtons($obCalendar);
-
-        $arResult['title'] = $obService->name;
-        $arResult['start'] = $obCalendar->date_time_begin;
-        $arResult['end'] = $obCalendar->date_time_end;
-        $arResult['backgroundColor'] = $arButtonsHtml['backgroundColor'];
-        $arResult['advHTML'] = $arButtonsHtml['buttonsHtml'];
-
-        return json_encode($arResult);
 
     }
 

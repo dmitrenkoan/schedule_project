@@ -42,12 +42,12 @@
                             </thead>
                             <tbody data-type="insert-target">
                             @foreach($arResult as $arClient)
-                            <tr class="clickable-row" data-href="/customers/update/{{$arClient['id']}}">
+                            <tr id="client_{{$arClient['id']}}" class="clickable-row" data-type="update" data-link="/customers/update_form/{{$arClient['id']}}">
                                 <td>{{$arClient['name']}}</td>
                                 <td>{{$arClient['phone']}}</td>
                                 <td>{{$arClient['email']}}</td>
                                 <td>
-                                    {{$arClient['sex']}}
+                                    {{$arClient['sex'] ?$arGenderLang[$arClient['sex']]: ''}}
                                 </td>
                             </tr>
                             @endforeach

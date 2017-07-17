@@ -54,6 +54,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/customers', 'ClientsController@index');
 
+    Route::post('/customers/update_form/{id}', 'ClientsController@updateForm');
+
+    Route::post('/customers/update/{id}', 'ClientsController@update');
+
+    Route::post('/customers/delete/{id}', 'ClientsController@delete');
+
     Route::get('/inventory/products', 'InventaryProductsController@index');
 
     Route::post('/inventory/products/new', 'InventaryProductsController@add');

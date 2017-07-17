@@ -32,8 +32,16 @@ $('[data-type=submit]').on('click' , function () {
     var name;
     url = $(this).attr('data-target');
     $('#modal_window input, #modal_window select').each(function () {
-        name = $(this).attr('name');
-        request[name] = $(this).val();
+        if($(this).prop('type') == 'radio') {
+            if($(this).prop('checked') === true) {
+                name = $(this).attr('name');
+                request[name] = $(this).val();
+            }
+        }
+        else {
+            name = $(this).attr('name');
+            request[name] = $(this).val();
+        }
     });
     $('#modal_window textarea').each(function () {
         name = $(this).attr('name');
@@ -81,8 +89,18 @@ $('body').on('click' , '[data-type=update_submit]', function () {
     target = '#' + $(this).attr('data-insert');
     action = $(this).attr('data-action');
     $('#update_modal input, #update_modal select').each(function () {
-        name = $(this).attr('name');
-        request[name] = $(this).val();
+        //console.log($(this).prop('checked'));
+        if($(this).prop('type') == 'radio') {
+            if($(this).prop('checked') === true) {
+                name = $(this).attr('name');
+                request[name] = $(this).val();
+            }
+        }
+        else {
+            name = $(this).attr('name');
+            request[name] = $(this).val();
+        }
+
     });
     $('#update_modal textarea').each(function () {
         name = $(this).attr('name');
@@ -116,11 +134,12 @@ $('body').on('click' , '[data-type=update_submit]', function () {
             data: request,
             dataType: "json",
             success: function(result) {
-                //console.log(result['id'], typeof(result['id']), typeof(Number(result['id'])));
+
                 setTimeout(function () {
                     $('#calendar').fullCalendar('removeEvents', Number(result.id));
+                    $('#calendar').fullCalendar( 'refetchEvents');
                     $('#update_modal').fadeOut();
-                }, 200);
+                }, 400);
             }
         });
     }
@@ -131,14 +150,14 @@ $('body').on('click' , '[data-type=update_submit]', function () {
             data: request,
             dataType: "json",
             success: function(result) {
-                //console.log(result['id'], typeof(result['id']), typeof(Number(result['id'])));
-                /*result = $('#calendar').fullCalendar( 'removeEvents' , Number(result['id']) );
-                return false;*/
+
                 setTimeout(function () {
-                    $('#calendar').fullCalendar( 'removeEvents', Number(result.id));
+                    $('#calendar').fullCalendar( 'removeEventSource', Number(result.id));
                     $('#calendar').fullCalendar( 'renderEvent', result, true );
-                }, 200);
-                $('#update_modal').fadeOut();
+                    $('#calendar').fullCalendar( 'refetchEvents');
+                    $('#update_modal').fadeOut();
+                }, 400);
+
             }
         });
     }

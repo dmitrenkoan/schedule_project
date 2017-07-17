@@ -232,6 +232,7 @@
             //"weekNumbersWithinDays": true,
             defaultDate: '{{date('Y-m-d')}}',
             slotLabelFormat: 'H:mm',
+            columnFormat: "ddd DD.MM",
             //editable: true,
             businessHours: [ // specify an array instead
                 {
