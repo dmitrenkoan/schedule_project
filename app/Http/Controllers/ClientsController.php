@@ -11,10 +11,6 @@ use DateTime;
 
 class ClientsController extends Controller
 {
-    public $arGenderLang = array(
-    "male" => "Мужчина",
-    "female" => "Женщина",
-    );
     public function index(Request $request) {
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
@@ -33,7 +29,6 @@ class ClientsController extends Controller
         return view('layouts.customers' , [
             'arResult' => $arClients,
             'arMainMenu' => $arMainMenu,
-            'arGenderLang' => $this->arGenderLang,
         ]);
     }
 
@@ -107,7 +102,6 @@ class ClientsController extends Controller
 
         return view('layouts.customersUpdate', [
             'obClient' => $obClient,
-            'arGenderLang' => $this->arGenderLang
         ]);
 
     }

@@ -47,7 +47,7 @@
                                 <td>{{$arClient['phone']}}</td>
                                 <td>{{$arClient['email']}}</td>
                                 <td>
-                                    {{$arClient['sex'] ?$arGenderLang[$arClient['sex']]: ''}}
+                                    {{$arClient['sex']}}
                                 </td>
                             </tr>
                             @endforeach
@@ -100,11 +100,11 @@
                                             </div>
                                             <div class="components-Form-FormField___self___10VZD">
                                                 <div class="form-group no-margin">
-                                                    <span class="radio radio-success inline no-margin md-m-b-10"><input type="radio" value="male" name="sex" id="customer_gender_male">
+                                                    <span class="radio radio-success inline no-margin md-m-b-10"><input type="radio" value="М" name="sex" id="customer_gender_male">
                                                         <label class="collection_radio_buttons" for="customer_gender_male">Мужчина</label>
                                                     </span>
                                                     <span class="radio radio-success inline no-margin md-m-b-10">
-                                                        <input type="radio" value="female" name="sex" id="customer_gender_female">
+                                                        <input type="radio" value="Ж" name="sex" id="customer_gender_female">
                                                         <label class="collection_radio_buttons" for="customer_gender_female">Женщина</label></span>
                                                 </div>
                                             </div>
