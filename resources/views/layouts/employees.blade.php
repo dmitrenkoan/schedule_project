@@ -1,5 +1,7 @@
 @extends('template')
 
+@section('pageTitle', $pageTitle)
+
 @section('content')
     <section class="main-content">
         <div class="js-loading-image" id="loading_image" style="display: none">
@@ -67,6 +69,8 @@
                 </div>
             </section>
         </div>
+
+        {{$arStaff->links()}}
 
         <div class="components-Modal-Modal___background___59VHw" id="modal_window" style="display:none">
             <div class="components-Modal-Modal___container___3mETe components-Modal-Modal___large___28vxo">

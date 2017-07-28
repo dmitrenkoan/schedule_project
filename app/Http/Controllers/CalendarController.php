@@ -21,6 +21,7 @@ use Validator;
 class CalendarController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $arServicesID = array();
         $arJSEventsData = array();
         $curRoute = '/'.$request->path();
@@ -71,7 +72,6 @@ class CalendarController extends Controller
 
             $arJSEventsData[] = $arJSItem;
         }
-        //dd($arJSEventsData);
         $arJSData['events_data'] = json_encode($arJSEventsData);
 
         return view('layouts.calendar', [
@@ -80,6 +80,7 @@ class CalendarController extends Controller
             'arStaff' => $arStaff,
             'arJSData' => $arJSData,
             'curStaffID' => $curStaffID,
+            'pageTitle' => $pageTitle
         ]);
     }
 

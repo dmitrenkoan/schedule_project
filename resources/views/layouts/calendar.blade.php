@@ -1,5 +1,7 @@
 @extends('template')
 
+@section('pageTitle', $pageTitle)
+
 @section('content')
 
     <section class="main-content">

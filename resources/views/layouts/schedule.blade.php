@@ -1,5 +1,7 @@
 @extends('template')
 
+@section('pageTitle', $pageTitle)
+
 @section('content')
     <section class="main-content">
         <div class="js-loading-image" id="loading_image" style="display: none">

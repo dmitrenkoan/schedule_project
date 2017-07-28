@@ -1,5 +1,7 @@
 @extends('template')
 
+@section('pageTitle', $pageTitle)
+
 @section('content')
     <section class="main-content">
         <div class="js-loading-image" id="loading_image" style="display: none">
@@ -104,9 +106,7 @@
                                                    <div class="components-Inventory-components-Products-ProductList___pagination___2XBx5">
                                                        <div class="components-Pagination-Pagination___self___1MlT3">
                                                            <div class="components-Pagination-PaginationInfo___self___1qLne">
-                                                               <!-- react-text: 123 -->Displaying all<!-- /react-text -->
-                                                               <b class="components-Pagination-PaginationInfo___totalCount___2Xt53">2</b>
-                                                               <!-- react-text: 125 -->products<!-- /react-text -->
+                                                               {{$arResult['inventory']->links()}}
                                                            </div>
                                                        </div>
                                                    </div>

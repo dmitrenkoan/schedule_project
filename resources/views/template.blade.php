@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('pageTitle')</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -75,13 +75,13 @@
     <nav class="inline hidden-mobile">
         <ul class="top-nav hidden-mobile">
             <li class="top-nav__item">
-                <button class="js-sidebar-toggle js-sidebar-toggle-btn sidebar-toggle-btn sidebar-toggle-btn--active sidebar-toggle-btn--active">
+                <button class="js-sidebar-toggle js-sidebar-toggle-btn sidebar-toggle-btn sidebar-toggle-btn--active sidebar-toggle-btn--active" onclick="history.back()">
                     <span class="sidebar-toggle-btn__icon"></span>
                 </button>
             </li>
             <li class="top-nav__item">
                 <div class="top-nav__title">
-                    <span class="top-nav__title--item">Services</span>
+                    <span class="top-nav__title--item">@yield('pageTitle')</span>
 
                 </div>
             </li>

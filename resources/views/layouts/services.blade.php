@@ -1,5 +1,7 @@
 @extends('template')
 
+@section('pageTitle', $pageTitle)
+
 
 @section('content')
     <section class="main-content">
@@ -21,7 +23,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        @if(!empty($arServices))
+
                         <div class="groups sortable-ready ui-sortable">
                             <div class="clickable-row group m-b-25" data-group="" data-href="" data-remote="true" id="">
                                 <div class="row">
@@ -37,6 +39,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if(!empty($arServices))
                                 <ul class="services connectedSortable no-padding collapse in sortable-ready ui-sortable" data-type="insert-target">
                                     @foreach($arServices as $arServiceItem)
                                     <li class="b-b b-grey bg-white service" id="service_{{$arServiceItem['id']}}">
@@ -65,15 +68,18 @@
                                     @endforeach
 
                                 </ul>
+                                @endif
 
                             </div>
 
                         </div>
-                        @endif
+
                     </div>
                 </div>
             </div>
         </section>
+
+        {{$arServices->links()}}
 
         <div class="components-Modal-Modal___background___59VHw" id="modal_window" style="display:none">
             <div class="components-Modal-Modal___container___3mETe components-Modal-Modal___large___28vxo">

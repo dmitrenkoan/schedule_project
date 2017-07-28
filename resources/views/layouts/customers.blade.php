@@ -1,5 +1,7 @@
 @extends('template')
 
+@section('pageTitle', $pageTitle)
+
 @section('content')
     <section class="main-content">
         <div class="js-loading-image" id="loading_image" style="display: none">
@@ -57,7 +59,7 @@
                     </div>
                     <div class="pagination-container">
 
-                        <div class="pagination-info paging">Displaying <b>all {{count($arResult)}}</b> clients</div>
+                        <div class="pagination-info paging">{{$arResult->links()}}</div>
                     </div>
                 </div>
             </div>

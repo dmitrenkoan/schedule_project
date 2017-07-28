@@ -24,7 +24,7 @@
                                         <div class="components-Form-FormGroupCol___self___2sGrM">
 
                                             <div class="components-Form-FormField___self___10VZD">
-                                                <label class="components-Form-FormField___label___1NQ5t" for="price">Цена</label>
+                                                <label class="components-Form-FormField___label___1NQ5t" for="price">Телефон</label>
                                                 <div class="components-Input-Input___self___2cl9W">
                                                     <div class="components-Input-Input___container___2dCSs">
                                                         <input type="text" name="phone" class="components-Input-Input___input___1fuFB" placeholder="" value="{{$arStaff[0]['phone']}}">

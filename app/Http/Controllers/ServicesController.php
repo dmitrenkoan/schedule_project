@@ -12,6 +12,7 @@ use App\ServiceInventoryModel;
 class ServicesController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
         foreach($arMainMenu as  $key => $MenuItem) {
@@ -29,12 +30,13 @@ class ServicesController extends Controller
         foreach($arStaff as $staffItem) {
             $arStaffList[$staffItem->id] = $staffItem;
         }
-        $arServices = $obServices->where('salon_id' , $curUser['salon_id'])->get()->toArray();
+        $arServices = $obServices->where('salon_id' , $curUser['salon_id'])->paginate(20);
 
         return view('layouts.services', [
             'arServices' => $arServices,
             'arStaff' => $arStaffList,
             'arMainMenu' => $arMainMenu,
+            'pageTitle' => $pageTitle
         ]);
     }
 

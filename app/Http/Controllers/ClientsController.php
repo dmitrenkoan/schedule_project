@@ -8,10 +8,14 @@ use Auth;
 use DB;
 use Illuminate\Support\Facades\App;
 use DateTime;
+use App\Title;
+
 
 class ClientsController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
+        //dd(config('debug'));
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
         foreach($arMainMenu as  $key => $MenuItem) {
@@ -25,10 +29,12 @@ class ClientsController extends Controller
 
         $obClients = new Clients();
         $curUser = Auth::user()->toArray();
-        $arClients = $obClients->where('salons_id' , $curUser['salon_id'])->get()->toArray();
+        $arClients = $obClients->where('salons_id' , $curUser['salon_id'])->paginate(20);
+        //dd($arClients);
         return view('layouts.customers' , [
             'arResult' => $arClients,
             'arMainMenu' => $arMainMenu,
+            'pageTitle' => $pageTitle
         ]);
     }
 

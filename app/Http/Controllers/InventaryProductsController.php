@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class InventaryProductsController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
         foreach($arMainMenu as  $key => $MenuItem) {
@@ -32,8 +33,7 @@ class InventaryProductsController extends Controller
         }
         $dbInventory = new InventaryModel();
         $arResult['inventory'] = $dbInventory ->where('salons_id', $curUser['salon_id'])
-            ->get()
-            ->toArray();
+            ->paginate(20);
 
 
         $arResult['unit_types'] = $arUnitResult;
@@ -46,6 +46,7 @@ class InventaryProductsController extends Controller
             'page_param' => 'productsList',
             'arResult' => $arResult,
             'arMainMenu' => $arMainMenu,
+            'pageTitle' => $pageTitle
         ]);
     }
 

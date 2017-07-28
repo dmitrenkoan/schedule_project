@@ -8,6 +8,7 @@ use DB;
 class ScheduleController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
         foreach($arMainMenu as  $key => $MenuItem) {
@@ -30,6 +31,7 @@ class ScheduleController extends Controller
         return view('layouts.schedule', [
             'arSubMenu' => $arSubMenu,
             'arMainMenu' => $arMainMenu,
+            'pageTitle' => $pageTitle
         ]);
     }
 

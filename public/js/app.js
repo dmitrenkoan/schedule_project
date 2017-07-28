@@ -242,9 +242,10 @@ $('body').on('click', '[data-type=delete]', function () {
        $.ajax({
            type: "POST",
            url: url,
-           dataType: "html",
+           dataType: "json",
            success: function(result) {
-               console.log(result);
+               //console.log(result,result['success'], result.success);
+
                if(result['success'] == 'Y') {
                    $(target).remove();
                    $('#update_modal').fadeOut();

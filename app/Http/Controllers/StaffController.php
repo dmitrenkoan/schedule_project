@@ -15,6 +15,7 @@ use Illuminate\Routing\Route;
 class StaffController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
 
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
@@ -39,11 +40,12 @@ class StaffController extends Controller
         }
         $obStaff = new StaffModel();
         $curUser = Auth::user()->toArray();
-        $arStaff = $obStaff->where('salons_id' , $curUser['salon_id'])->get()->toArray();
+        $arStaff = $obStaff->where('salons_id' , $curUser['salon_id'])->paginate(20);
         return view('layouts.employees' , [
            'arStaff' => $arStaff,
            'arSubMenu' => $arSubMenu,
            'arMainMenu' => $arMainMenu,
+           'pageTitle' => $pageTitle,
         ]);
     }
 

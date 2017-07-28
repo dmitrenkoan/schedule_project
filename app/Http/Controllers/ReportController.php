@@ -9,6 +9,7 @@ use Auth;
 class ReportController extends Controller
 {
     public function index(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $result = array();
         $arInput = $request->all();
         $curUser = Auth::user()->toArray();
@@ -64,11 +65,13 @@ class ReportController extends Controller
             'totalQuantity' => 0,
             'pageParam' => 'reports',
             'arInput' => $arInput,
-            'arResult' => $result
+            'arResult' => $result,
+            'pageTitle' => $pageTitle,
         ]);
     }
 
     public function staff(Request $request) {
+        $pageTitle = \App\Title::getCurTitle();
         $result = array();
         $arInput = $request->all();
         $curUser = Auth::user()->toArray();
@@ -131,7 +134,9 @@ class ReportController extends Controller
             'pageParam' => 'reports',
             'arInput' => $arInput,
             'arResult' => $result,
-            'arStatusName' => $arStatusName
+            'arStatusName' => $arStatusName,
+            'pageTitle' => $pageTitle
+
         ]);
     }
 
