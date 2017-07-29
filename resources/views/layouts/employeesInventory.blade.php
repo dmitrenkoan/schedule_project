@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('pageTitle', $pageTitle)
+@section('pageTitle', 'Инвентарь сотрудника')
 
 @section('content')
     <section class="main-content">
