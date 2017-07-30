@@ -214,10 +214,11 @@
 
 <!-- Scripts -->
 <script src="{{ asset('js/jquery-3.2.1.min.js')}}"></script>
-@if(!empty($pageParam) && $pageParam == 'calendar')
+@if(!empty($pageParam) && $pageParam == 'calendar' && !empty($arJSData))
     <script src="{{ asset('js/moment.min.js')}}"></script>
     <script src="{{ asset('js/fullcalendar.min.js')}}"></script>
     <script src='{{ asset('js/locale/ru.js')}}'></script>
+
 
     <script>
         var calendarItems = {!! $arJSData['events_data'] !!};

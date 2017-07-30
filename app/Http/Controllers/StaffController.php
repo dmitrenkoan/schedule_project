@@ -86,7 +86,8 @@ class StaffController extends Controller
     }
 
     public function InventoryAdd(Request $request) {
-        $obStore = InventaryModel::where('name', '=' , $request->inventory_name)->first();
+        $curUser = Auth::user()->toArray();
+        $obStore = InventaryModel::where('salons_id', $curUser['salon_id'])->where('id', $request->item_id)->first();
         //dd($obStore->id);
         if($obStore->id > 0 && ($obStore->quantity >= $request->quantity)) {
             $obStaffInventory = StaffInventory::where('staff_id' , '=' , $request->staff_id)->where('inventory_id' , '=' , $obStore->id)->first();

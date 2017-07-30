@@ -12,6 +12,7 @@ use App\ServiceInventoryModel;
 class ServicesController extends Controller
 {
     public function index(Request $request) {
+        $arStaffList = array();
         $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();

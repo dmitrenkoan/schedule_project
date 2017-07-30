@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 
 class SearchController extends Controller
 {
     public function index(Request $request) {
         $result = '';
         $arRequest = $request->toArray();
+        $curUser = Auth::user()->toArray();
         switch($arRequest['searchTarget']) {
             case 'inventory':
-                $arResult = DB::table('inventory')->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
+                $arResult = DB::table('inventory')->where('salons_id', $curUser['salon_id'])->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
                 $arUnitTypes = DB::table('unit_type')->get()->toArray();
                 foreach($arUnitTypes as $arUnitItem) {
                     $arUnits[$arUnitItem->id] = $arUnitItem;
@@ -25,7 +27,7 @@ class SearchController extends Controller
                 }
             break;
             case 'services':
-                $arResult = DB::table('services')->where('staff_id' , $request->staff_id)->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
+                $arResult = DB::table('services')->where('salon_id', $curUser['salon_id'])->where('staff_id' , $request->staff_id)->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
                 if(!empty($arResult)) {
                     foreach($arResult as $arItem) {
                         $result .= "<li data-itemID='{$arItem->id}' data-duration='{$arItem->time_duration}' onclick='showNewServiceResult($(this))'>{$arItem->name}</li>";

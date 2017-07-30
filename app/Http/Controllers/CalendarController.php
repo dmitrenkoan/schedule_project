@@ -24,6 +24,8 @@ class CalendarController extends Controller
         $pageTitle = \App\Title::getCurTitle();
         $arServicesID = array();
         $arJSEventsData = array();
+        $arJSData = array();
+        $curStaffID = NULL;
         $curRoute = '/'.$request->path();
         $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
         foreach($arMainMenu as  $key => $MenuItem) {
@@ -39,40 +41,42 @@ class CalendarController extends Controller
         if(!empty($request->staff_id)) {
             $curStaffID = $request->staff_id;
         }
-        else {
+        elseif(!empty($arStaff[0]->id)) {
             $curStaffID = $arStaff[0]->id;
         }
 
+        if(!empty($curStaffID)) {
 
-        $arCalendarItems = DB::table('calendar')->where('staff_id', $curStaffID)->where('salons_id' , $curUser['salon_id'])->get()->toArray();
+            $arCalendarItems = DB::table('calendar')->where('staff_id', $curStaffID)->where('salons_id' , $curUser['salon_id'])->get()->toArray();
 
-        foreach($arCalendarItems as $calItem) {
-            $arServicesID[] = $calItem->services_id;
-        }
-        $arServices = ServicesModel::find($arServicesID);
-        foreach($arServices as $key => $obService) {
-            $arCalendarServices[$obService->id] = $obService;
-        }
-        foreach($arCalendarItems as $obElement) {
-            if($obElement->status == 'CA') {
-                continue;
+            foreach($arCalendarItems as $calItem) {
+                $arServicesID[] = $calItem->services_id;
             }
-            $arButtonsHtml = $this->createHtmlButtons($obElement);
+            $arServices = ServicesModel::find($arServicesID);
+            foreach($arServices as $key => $obService) {
+                $arCalendarServices[$obService->id] = $obService;
+            }
+            foreach($arCalendarItems as $obElement) {
+                if($obElement->status == 'CA') {
+                    continue;
+                }
+                $arButtonsHtml = $this->createHtmlButtons($obElement);
 
 
 
-            $arJSItem = [
-                'id' => $obElement->id,
-                'title' => $arCalendarServices[$obElement->services_id]->name,
-                'start' => $obElement->date_time_begin,
-                'end' => $obElement->date_time_end,
-                'backgroundColor' => $arButtonsHtml['backgroundColor'],
-                'advHTML' => $arButtonsHtml['buttonsHtml'],
-            ];
+                $arJSItem = [
+                    'id' => $obElement->id,
+                    'title' => $arCalendarServices[$obElement->services_id]->name,
+                    'start' => $obElement->date_time_begin,
+                    'end' => $obElement->date_time_end,
+                    'backgroundColor' => $arButtonsHtml['backgroundColor'],
+                    'advHTML' => $arButtonsHtml['buttonsHtml'],
+                ];
 
-            $arJSEventsData[] = $arJSItem;
+                $arJSEventsData[] = $arJSItem;
+            }
+            $arJSData['events_data'] = json_encode($arJSEventsData);
         }
-        $arJSData['events_data'] = json_encode($arJSEventsData);
 
         return view('layouts.calendar', [
             'arMainMenu' => $arMainMenu,
