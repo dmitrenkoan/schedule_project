@@ -36,10 +36,10 @@ class SearchController extends Controller
                 }
             break;
             case 'clients':
-                $arResult = DB::table('clients')->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
+                $arResult = DB::table('clients')->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->orWhere('phone', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
                 if(!empty($arResult)) {
                     foreach($arResult as $arItem) {
-                        $result .= "<li data-itemID='{$arItem->id}' onclick='showNewClientsResult($(this))'>{$arItem->name}</li>";
+                        $result .= "<li data-itemID='{$arItem->id}' onclick='showNewClientsResult($(this))'>{$arItem->name} [{$arItem->phone}]</li>";
                     }
                     $result = "<ul>".$result."</ul>";
                 }

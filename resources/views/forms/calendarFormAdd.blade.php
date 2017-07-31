@@ -25,6 +25,7 @@
                                         <label class="components-Form-FormField___label___1NQ5t">Выбрать клиента</label>
                                         <div class="components-Input-Input___self___2cl9W">
                                             <div class="components-Input-Input___container___2dCSs">
+                                                <input type="hidden" name="client_id" value="">
                                                 <input type="text" name="client_name" onkeyup="fastSearch($(this))" onBlur="HideFastSearchBlock($(this))" class="components-Input-Input___input___1fuFB" placeholder="Начните ввод" value="" data-search-number="" data-select="clients">
                                             </div>
                                         </div>

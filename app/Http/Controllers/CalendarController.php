@@ -104,9 +104,9 @@ class CalendarController extends Controller
         $obCalendar = new CalendarModel();
         $curUser = Auth::user()->toArray();
         if($this->validateCalendarData($request->all())) {
-            if(!empty($request->client_name)) {
-                $obClient = DB::table('clients')->where('name', $request->client_name)->first();
-                $clientID = $obClient->id;
+            if(!empty($request->client_id)) {
+                //$obClient = DB::table('clients')->where('name', $request->client_name)->first();
+                $clientID = $request->client_id;
             }
             elseif (!empty($request->new_client_name)) {
                 $obClients = new Clients();

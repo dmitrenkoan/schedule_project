@@ -17,6 +17,8 @@ function showNewServiceResult(Object) {
 
 function showNewClientsResult(Object) {
     Object.closest('.row.service-pricing-level').find('input[name=client_name]').val(Object.text());
+    console.log(Object.attr('data-itemid'));
+    Object.closest('.row.service-pricing-level').find('input[name=client_id]').val(Object.attr('data-itemid'));
 }
 // fast search inventory
 /*$('body [data-input-type=fSearch]').keyup(function() {
