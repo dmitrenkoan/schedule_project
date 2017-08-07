@@ -50,8 +50,9 @@ class SearchController extends Controller
 
         if(empty($result)) {
             $result = '<span class="noResult">Не найдено ни одного совпадения, проверьте правильность ввода данных</span>';
-            $result = "<ul>".$result."</ul>";
+
         }
+        $result = "<ul>".$result."</ul>";
         return $result;
 
     }
