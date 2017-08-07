@@ -23,16 +23,16 @@ class SearchController extends Controller
                     foreach($arResult as $arItem) {
                         $result .= "<li data-itemID='{$arItem->id}' data-unitType='{$arUnits[$arItem->unit_type_id]->short_name}' data-quantity='{$arItem->quantity}' data-row-number='{$arRequest["rowNumber"]}' onclick='showNewItemResult($(this))'>{$arItem->name}</li>";
                     }
-                    $result = "<ul>".$result."</ul>";
+
                 }
             break;
-            case 'services': 
+            case 'services':
                 $arResult = DB::table('services')->where('salon_id', $curUser['salon_id'])->where('staff_id' , $request->staff_id)->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->paginate(10);
                 if(!empty($arResult)) {
                     foreach($arResult as $arItem) {
                         $result .= "<li data-itemID='{$arItem->id}' data-duration='{$arItem->time_duration}' onclick='showNewServiceResult($(this))'>{$arItem->name}</li>";
                     }
-                    $result = "<ul>".$result."</ul>";
+
                 }
             break;
             case 'clients':
@@ -41,14 +41,16 @@ class SearchController extends Controller
                     foreach($arResult as $arItem) {
                         $result .= "<li data-itemID='{$arItem->id}' onclick='showNewClientsResult($(this))'>{$arItem->name} [{$arItem->phone}]</li>";
                     }
-                    $result = "<ul>".$result."</ul>";
+
                 }
             break;
             default:
                 break;
         }
+
         if(empty($result)) {
             $result = '<span class="noResult">Не найдено ни одного совпадения, проверьте правильность ввода данных</span>';
+            $result = "<ul>".$result."</ul>";
         }
         return $result;
 
