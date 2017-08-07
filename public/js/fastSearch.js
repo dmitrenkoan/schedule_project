@@ -48,7 +48,7 @@ function fastSearch(curObject) {
     var searchInput;
     searchInput = curObject;
 
-    if(searchInput.val().length > 2) {
+    if(searchInput.val().length >= 1) {
         $.ajax({
             type: "POST",
             url: '/fast_search',

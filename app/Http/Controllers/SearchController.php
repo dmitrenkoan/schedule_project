@@ -26,8 +26,8 @@ class SearchController extends Controller
                     $result = "<ul>".$result."</ul>";
                 }
             break;
-            case 'services':
-                $arResult = DB::table('services')->where('salon_id', $curUser['salon_id'])->where('staff_id' , $request->staff_id)->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->get()->toArray();
+            case 'services': 
+                $arResult = DB::table('services')->where('salon_id', $curUser['salon_id'])->where('staff_id' , $request->staff_id)->where('name', 'like' ,"%{$arRequest['searchRequest']}%")->paginate(10);
                 if(!empty($arResult)) {
                     foreach($arResult as $arItem) {
                         $result .= "<li data-itemID='{$arItem->id}' data-duration='{$arItem->time_duration}' onclick='showNewServiceResult($(this))'>{$arItem->name}</li>";
