@@ -150,9 +150,9 @@ $('body').on('click' , '[data-type=update_submit]', function () {
             data: request,
             dataType: "json",
             success: function(result) {
-
                 setTimeout(function () {
-                    $('#calendar').fullCalendar( 'removeEventSource', Number(result.id));
+                    console.log(result);
+                    $('#calendar').fullCalendar( 'removeEvents', Number(result.id));
                     $('#calendar').fullCalendar( 'renderEvent', result, true );
                     $('#calendar').fullCalendar( 'refetchEvents');
                     $('#update_modal').fadeOut();

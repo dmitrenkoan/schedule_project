@@ -219,7 +219,6 @@
     <script src="{{ asset('js/fullcalendar.min.js')}}"></script>
     <script src='{{ asset('js/locale/ru.js')}}'></script>
 
-
     <script>
         var calendarItems = {!! $arJSData['events_data'] !!};
         // full calendar plugin

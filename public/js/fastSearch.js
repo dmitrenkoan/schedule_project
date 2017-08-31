@@ -17,7 +17,7 @@ function showNewServiceResult(Object) {
 
 function showNewClientsResult(Object) {
     Object.closest('.row.service-pricing-level').find('input[name=client_name]').val(Object.text());
-    console.log(Object.attr('data-itemid'));
+    //console.log(Object.attr('data-itemid'));
     Object.closest('.row.service-pricing-level').find('input[name=client_id]').val(Object.attr('data-itemid'));
 }
 // fast search inventory
@@ -45,14 +45,21 @@ function showNewClientsResult(Object) {
     }
 });*/
 function fastSearch(curObject) {
-    var searchInput;
+    var searchInput, staffId;
     searchInput = curObject;
 
     if(searchInput.val().length >= 1) {
+        if (searchInput.attr('data-select') == 'inventory') {
+            staffId = searchInput.closest('.components-Loader-Loader___children___1nSg3').find('select[name=staff_id]').val();
+            //console.log(staffId, 111);
+        }
+        else {
+            staffId = searchInput.attr('data-staff');
+        }
         $.ajax({
             type: "POST",
             url: '/fast_search',
-            data: { searchRequest: searchInput.val(), searchTarget: searchInput.attr('data-select'), rowNumber: searchInput.attr('data-search-number'), staff_id:searchInput.attr('data-staff') },
+            data: { searchRequest: searchInput.val(), searchTarget: searchInput.attr('data-select'), rowNumber: searchInput.attr('data-search-number'), staff_id: staffId},
             dataType: "html",
             success: function(data) {
                 searchInput.closest('.row.service-pricing-level').find('.suggestionsBox').show();
@@ -64,6 +71,12 @@ function fastSearch(curObject) {
         HideFastSearchBlock(searchInput);
 
     }
+}
+
+function fastSearchReset(object, target) {
+    object.closest(target).find('[data-input-type=fSearch]').each(function() {
+       $(this).val('');
+    });
 }
 
 // fast search result

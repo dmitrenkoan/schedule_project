@@ -67,6 +67,17 @@
                         </div>
                         <div class="components-Form-FormField___self___10VZD">
                             <span class="components-Select-Select___self___13CJj">
+
+                                <select name="inventory_action"  class="components-Select-Select___select___1ytQc" >
+                                    <option value="issued" @if(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'issued') selected @endif>Выданный</option>
+                                    <option value="spent" @if(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'spent') selected @endif>Потраченный</option>
+                                </select>
+
+                                                                    <span class="components-Icon-Icon___self___2zpSX components-Icon-Icon___self-span___yjOO0 components-Icon-Icon___color-gray___eeS_g components-Select-Select___icon-right___1gDJ1"><svg version="1.1" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;" xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve"><path d="M24,36c-0.256,0-0.512-0.098-0.707-0.293l-22-22c-0.391-0.391-0.391-1.023,0-1.414s1.023-0.391,1.414,0 L24,33.586l21.293-21.293c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-22,22C24.512,35.902,24.256,36,24,36z"></path></svg></span>
+                                                                </span>
+                        </div>
+                        <div class="components-Form-FormField___self___10VZD">
+                            <span class="components-Select-Select___self___13CJj">
                         <button name="button" type="submit" class="btn btn-success m-l-5 sm-pull-right sm-m-b-10 report-view-button"><span class="">Сформировать</span>
                         </button>
                             </span>
@@ -90,7 +101,7 @@
                             <tr>
                                 <th><a >Наименование</a></th>
                                 <th><a >Сотрудник</a></th>
-                                <th><a >Количество выданого</a></th>
+                                <th><a >Количество @if(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'issued') выданого @elseif(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'spent') потраченного @endif</a></th>
                                 <th><a >Остаток</a></th>
                                 <th><a >Дата выдачи</a></th>
                             </tr>

@@ -42,7 +42,7 @@
                                 @if(!empty($arServices))
                                 <ul class="services connectedSortable no-padding collapse in sortable-ready ui-sortable" data-type="insert-target">
                                     @foreach($arServices as $arServiceItem)
-                                    <li class="b-b b-grey bg-white service" id="service_{{$arServiceItem['id']}}">
+                                    <li class="b-b b-grey bg-white service" id="service_{{$arServiceItem['id']}}" data-type="update" data-link="/services/update_form/{{$arServiceItem['id']}}">
                                         <div class="row item clickable-row" >
                                             <div class="media">
                                                 <div class="media-left media-middle ui-sortable-handle">
@@ -50,10 +50,17 @@
                                                 </div>
                                                 <div class="media-body media-middle">
                                                     <div class="col-sm-4 col-md-4 col-lg-4">
-                                                        <a class="service__name event-link" data-type="update" data-link="/services/update_form/{{$arServiceItem['id']}}" >{{$arServiceItem['name']}}</a>
+                                                        <a class="service__name event-link"  >{{$arServiceItem['name']}}</a>
                                                     </div>
                                                     <div class="col-sm-3 col-md-3 col-lg-3">
-                                                        <a class="service__name event-link" data-type="update" data-link="/services/update_form/{{$arServiceItem['id']}}" >{{$arStaff[$arServiceItem['staff_id']]->name}}</a>
+                                                        <a class="service__name event-link"  >
+
+                                                         @if(!empty($arServicesStaff[$arServiceItem->id]))
+                                                             @foreach($arServicesStaff[$arServiceItem->id] as $key => $serviceStaffItemID)
+                                                                 {{($key >0)?', ':''}}{{$arStaff[$serviceStaffItemID]->name}}
+                                                             @endforeach
+                                                            @endif
+                                                        </a>
                                                     </div>
                                                     <div class="col-sm-3 col-md-3 col-lg-3 pull-right text-right">
                                                         <span>{{$arServiceItem['price']}} грн</span>
@@ -154,15 +161,15 @@
 
                                             <div class="components-Form-FormField___self___10VZD">
                                                 <label class="components-Form-FormField___label___1NQ5t" for="productBrandId">Сотрудник</label>
-                                                <span class="components-Select-Select___self___13CJj">
-                                                                <select name="staff_id" required="" class="components-Select-Select___select___1ytQc">
+
+                                                                <select name="staff_id" multiple size="5" required="" >
                                                                     <option value="">Выберите сотрудника</option>
                                                                     @foreach($arStaff as $staffItem)
                                                                         <option value="{{$staffItem->id}}">{{$staffItem->name}}</option>
                                                                     @endforeach
                                                                 </select>
-                                                                <span class="components-Icon-Icon___self___2zpSX components-Icon-Icon___self-span___yjOO0 components-Icon-Icon___color-gray___eeS_g components-Select-Select___icon-right___1gDJ1"><svg version="1.1" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;" xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve"><path d="M24,36c-0.256,0-0.512-0.098-0.707-0.293l-22-22c-0.391-0.391-0.391-1.023,0-1.414s1.023-0.391,1.414,0 L24,33.586l21.293-21.293c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-22,22C24.512,35.902,24.256,36,24,36z"></path></svg></span>
-                                                            </span>
+
+
                                             </div>
 
                                         </div>

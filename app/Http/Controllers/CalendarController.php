@@ -15,12 +15,17 @@ use App\ServiceInventoryModel;
 use App\StaffInventory;
 use \stdClass;
 use Validator;
+use App\StaffInventoryTransfer;
+use App\InventaryModel;
+use App\CalendarEventLog;
+
 
 
 
 class CalendarController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $pageTitle = \App\Title::getCurTitle();
         $arServicesID = array();
         $arJSEventsData = array();
@@ -88,19 +93,21 @@ class CalendarController extends Controller
         ]);
     }
 
-    public function addForm(Request $request) {
+    public function addForm(Request $request)
+    {
         $curUser = Auth::user()->toArray();
-        $arServices = DB::table('services')->where('staff_id', $request->curStaffID)->where('salon_id' , $curUser['salon_id'])->get()->toArray();
+        //$arServices = DB::table('services')->where('staff_id', $request->curStaffID)->where('salon_id' , $curUser['salon_id'])->get()->toArray();
         $arStaff = DB::table('staff')->where('id', $request->curStaffID)->first();
         $arDateBegin = explode('T', $request->dateBegin);
         return view('forms.calendarFormAdd', [
-            'arServices' => $arServices,
+            //'arServices' => $arServices,
             'arStaff' => $arStaff,
             'arDateBegin' => $arDateBegin,
         ]);
     }
 
-    public function addEvent(Request $request) {
+    public function addEvent(Request $request)
+    {
         $obCalendar = new CalendarModel();
         $curUser = Auth::user()->toArray();
         if($this->validateCalendarData($request->all())) {
@@ -130,7 +137,12 @@ class CalendarController extends Controller
                 $obCalendar->date_time_end = $obEndDateTime->format("Y-m-d H:i:s");
             }
             if(!empty($request->service_name)) {
-                $obService = DB::table('services')->where('name', $request->service_name)->where('staff_id', $request->staff_id)->first();
+                $obService = DB::table('services')
+                    ->join('service_staff', 'service_staff.service_id', '=', 'services.id')
+                    ->where('service_staff.staff_id', $request->staff_id)
+                    ->where('services.name', $request->service_name)
+                    ->select('services.*')
+                    ->first();
                 $obCalendar->services_id = $obService->id;
             }
             $obCalendar->salons_id = $curUser['salon_id'];
@@ -157,7 +169,8 @@ class CalendarController extends Controller
 
     }
 
-    public function validateCalendarData($arData) {
+    public function validateCalendarData($arData)
+    {
         //dd($arData);
         $v = Validator::make($arData,
           array(
@@ -167,7 +180,7 @@ class CalendarController extends Controller
           )
         );
         if($v->fails()) {
-            dd($v->errors());
+
             return false;
         }
         else {
@@ -176,7 +189,8 @@ class CalendarController extends Controller
 
     }
 
-    public function confirmFormEvent($id) {
+    public function confirmFormEvent($id)
+    {
         $calendar = new CalendarModel();
         $obCalendar = $calendar->find($id);
         $obService = DB::table('services')->where('id', $obCalendar->services_id)->first();
@@ -186,21 +200,26 @@ class CalendarController extends Controller
         ]);
     }
 
-    public function confirmEvent($id,Request $request) {
+    public function confirmEvent($id,Request $request)
+    {
         $curUser = Auth::user()->toArray();
         $obCalendar = CalendarModel::find($id);
+        $expenses = NULL;
         $arResult = array();
         $continue = true;
         $obService = DB::table('services')->where('id', $obCalendar->services_id)->first();
-        $obServiceInventory = DB::table('service_inventory')->where('service_id', $obService->id)->first();
+        $obServiceInventory = DB::table('service_inventory')->where('service_id', $obService->id)->get();
         if(!empty($obServiceInventory)) {
-            $obStaffInventory = DB::table('staff_inventory')->where('staff_id', $obCalendar->staff_id)->where('inventory_id',$obServiceInventory->inventary_id)->first();
-            $continue = $this->staffInventoryReduce($obServiceInventory, $obStaffInventory);
+            foreach($obServiceInventory as $obServiceInventoryItem) {
+                $obStaffInventory = DB::table('staff_inventory')->where('staff_id', $obCalendar->staff_id)->where('inventory_id',$obServiceInventoryItem->inventary_id)->first();
+                $expenses+= $this->calcInventoryExpenses($obServiceInventoryItem);
+                $continue = $this->staffInventoryReduce($obServiceInventoryItem, $obStaffInventory, $obCalendar->staff_id);
+            }
         }
         if($continue) {
             $this->staffSalaryAdd($obService, $obCalendar, $curUser['salon_id']);
         }
-        if ($continue ) {
+
             if ($request->discount_value > $obService->price) {
                 $discount = $obService->price;
             }
@@ -216,7 +235,9 @@ class CalendarController extends Controller
             $obCalendar->status = "AC";
             $obCalendar->note = $request->discount_note;
 
+
             if($obCalendar->save()) {
+                $this->calendarEventLog($obService, $obCalendar, $expenses);
                 $htmlButtons = $this->createHtmlButtons($obCalendar);
                 $arResult = [
                     'id' => strval($obCalendar->id),
@@ -229,16 +250,52 @@ class CalendarController extends Controller
             }
 
 
-        }
-        //dd(json_encode($arResult));
         return (json_encode($arResult));
 
 
     }
 
-    protected function staffSalaryAdd($obService, $obCalendar, $salonID) {
+    protected function calcInventoryExpenses($obServiceInventoryItem)
+    {
+        $inventory = DB::table('inventory')->find($obServiceInventoryItem->inventary_id);
+        $result = $inventory->unit_price*$obServiceInventoryItem->quantity;
+        return $result;
+    }
+
+    protected function calendarEventLog($obService, $obCalendar, $expenses = NULL)
+    {
+     $staffInfo = DB::table('staff')->find($obCalendar->staff_id);
+     $clientInfo = DB::table('clients')->find($obCalendar->clients_id);
+
+     $obCalendarEventLog = new CalendarEventLog();
+     $obCalendarEventLog->calendar_id = $obCalendar->id;
+     $obCalendarEventLog->service_price = $obService->price;
+     $obCalendarEventLog->service_name = $obService->name;
+     $obCalendarEventLog->expenses = $expenses;
+     $obCalendarEventLog->worker_payment = $obService->worker_payment;
+     $obCalendarEventLog->staff_name = $staffInfo->name;
+     $obCalendarEventLog->client_name = $clientInfo->name;
+     $obCalendarEventLog->save();
+    }
+
+    protected function staffInventoryDecreaseLog($obServiceInventory, $obStaffInventory)
+    {
+        $inventory = InventaryModel::find($obStaffInventory->inventory_id)->first();
+        $obTransferLog = new StaffInventoryTransfer();
+        $obTransferLog->staff_id = $obStaffInventory->staff_id;
+        $obTransferLog->service_id = $obServiceInventory->service_id;
+        $obTransferLog->quantity = $obServiceInventory->quantity;
+        $obTransferLog->quantity_left = $obStaffInventory->quantity;
+        $obTransferLog->inventory_id = $obStaffInventory->inventory_id;
+        $obTransferLog->inventory_price = $inventory->unit_price;
+        $obTransferLog->save();
+    }
+
+    protected function staffSalaryAdd($obService, $obCalendar, $salonID)
+    {
         $obSalary = new staffSalary();
-        $obSalary->staff_id = $obService->staff_id;
+        //$obSalary->staff_id = $obService->staff_id;
+        $obSalary->staff_id = $obCalendar->staff_id;
         $obSalary->salons_id = $salonID;
         $obSalary->service_id = $obService->id;
         $obSalary->payment = $obService->worker_payment;
@@ -246,31 +303,58 @@ class CalendarController extends Controller
         return $obSalary->save();
     }
 
-    protected function staffInventoryReduce($obServiceInventory, $obStaffInventory) {
+    protected function staffInventoryReduce($obServiceInventory, $obStaffInventory, $staffID)
+    {
+        //dd($obServiceInventory, $obStaffInventory);
+        $obStaffInventory = $this->staffInventoryCheck($obServiceInventory, $obStaffInventory, $staffID);
         $newObStaffInventory = StaffInventory::find($obStaffInventory->id);
         $newObStaffInventory->quantity = $obStaffInventory->quantity - $obServiceInventory->quantity;
-        return $newObStaffInventory->save();
+        if($newObStaffInventory->save()) {
+            $this->staffInventoryDecreaseLog($obServiceInventory, $newObStaffInventory);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public function createHtmlButtons ($obElement) {
+    protected function staffInventoryCheck($obServiceInventory, $obStaffInventory, $staffID)
+    {
+        if ($obStaffInventory === NULL) {
+            $staffInventory = new StaffInventory();
+            $staffInventory->quantity = 0;
+            $staffInventory->staff_id = $staffID;
+            $staffInventory->inventory_id = $obServiceInventory->inventary_id;
+            $staffInventory->save();
+        }
+        else {
+            $staffInventory = $obStaffInventory;
+        }
+        return $staffInventory;
+
+    }
+
+    public function createHtmlButtons ($obElement)
+    {
         switch($obElement->status) {
             case "WA":
                 $result['backgroundColor'] = '#1eb2ca';
-                $result['buttonsHtml'] = '<span class="event-buttons"><button class="accept" data-type="update" data-link="/calendar/event/confirm_form/'.$obElement->id.'">Подтвердить</button><button class="cancel" data-type="update" data-link="/calendar/event/cancel_form/'.$obElement->id.'">Отменить</button></span>';
+                $result['buttonsHtml'] = '<span class="event-buttons"><button class="accept" data-type="update" data-link="/calendar/event/confirm_form/'.$obElement->id.'">Оплата</button><button class="cancel" data-type="update" data-link="/calendar/event/cancel_form/'.$obElement->id.'">Отмена</button></span>';
                 break;
             case "CA":
                 $result['backgroundColor'] = '#da4545';
-                $result['buttonsHtml'] = '<span class="event-buttons"><span class="status-canceled">Отменена</span></span>';
+                $result['buttonsHtml'] = '<span class="event-buttons"><span class="status-canceled">Отменен</span></span>';
                 break;
             case "AC":
                 $result['backgroundColor'] = '#1db14a';
-                $result['buttonsHtml'] = '<span class="event-buttons"><span class="status-accepted">Подтверждена</span></span>';
+                $result['buttonsHtml'] = '<span class="event-buttons"><span class="status-accepted">Оплачен</span></span>';
 
         }
         return $result;
     }
 
-    public function cancelFormEvent($id) {
+    public function cancelFormEvent($id)
+    {
         $dateObject = new stdClass();
         $obCalendar = CalendarModel::find($id);
         $dateBegin = new DateTime($obCalendar->date_time_begin);
@@ -287,7 +371,8 @@ class CalendarController extends Controller
         ]);
     }
 
-    public function cancelEvent($id, Request $request) {
+    public function cancelEvent($id, Request $request)
+    {
         $obCalendar = CalendarModel::find($id);
         $obService = DB::table('services')->where('id', $obCalendar->services_id)->first();
         $obCalendar->note = $request->discount_note;

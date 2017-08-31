@@ -92,6 +92,8 @@
                                     <th><a >Стоимость услуги</a></th>
                                     <th><a >Размер Скидки</a></th>
                                     <th><a >Заработок сотрудника</a></th>
+                                    <th><a >Затраты на материалы</a></th>
+                                    <th><a >Заработок</a></th>
                                     <th><a >Статус события</a></th>
                                     <th><a >Клиент</a></th>
                                     <th><a >Дата начала собатия</a></th>
@@ -102,17 +104,22 @@
                                 @foreach($arResult as $arReport)
                                     <?php
                                          if($arReport->status == "AC") {
-                                            $totalWorkerPayment+= $arReport->worker_payment;
-                                            $totalSum+= $arReport->price;
+                                            $totalWorkerPayment+= $arReport->base_worker_payment;
+                                            $totalSum+= $arReport->base_service_price;
                                             $totalDiscount+= $arReport->discount;
+                                            $totalExpenses += $arReport->expenses;
+                                            $profit = $arReport->base_service_price - $arReport->discount - $arReport->base_worker_payment - $arReport->expenses;
+                                            $totalProfit += $profit;
                                          }
                                         ?>
                                     <tr class="clickable-row {{$arReport->status}}">
                                         <td>{{$arReport->staff_name}}</td>
-                                        <td>{{$arReport->name}}</td>
-                                        <td>{{$arReport->price}} грн</td>
+                                        <td>{{$arReport->base_service_name}}</td>
+                                        <td>{{$arReport->base_service_price}} грн</td>
                                         <td>{{$arReport->discount > 0 ? $arReport->discount.' грн' : ''}} </td>
-                                        <td>{{$arReport->worker_payment}} грн</td>
+                                        <td>{{$arReport->base_worker_payment}} грн</td>
+                                        <td>{{$arReport->expenses > 0 ? $arReport->expenses.' грн': ''}}</td>
+                                        <td>{{$profit != NULL ? $profit.' грн': ''}}</td>
                                         <td>{{$arStatusName[$arReport->status]}}</td>
                                         <td>{{$arReport->client_name}}</td>
                                         <td>{{$arReport->date_time_begin}}</td>
@@ -125,6 +132,8 @@
                                     <td><b>Итого стоимость услуг:</b> {{$totalSum ? $totalSum: 0}} грн</td>
                                     <td><b>Итого сумма скидок:</b> {{$totalDiscount ? $totalDiscount: 0}} грн</td>
                                     <td><b>Итого заработок сотрудника:</b> {{$totalWorkerPayment ? $totalWorkerPayment: 0}} грн</td>
+                                    <td><b>Итого потрачено на материалы:</b> {{$totalExpenses ? $totalExpenses: 0}} грн</td>
+                                    <td><b>Итого чистая прибыль:</b> {{$totalProfit ? $totalProfit: 0}} грн</td>
                                     <td></td>
                                     <td></td>
                                 </tr>
