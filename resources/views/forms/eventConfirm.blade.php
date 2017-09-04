@@ -10,6 +10,14 @@
                                 <div class="components-Form-FormField___self___10VZD">
                                     <div class="form-group boolean optional customer_display_on_all">
                                         <div class="checkbox check-success">
+                                            <input class="boolean optional" type="checkbox" value="Y" name="card_payment" id="card_payment">
+                                            <label class="boolean optional" for="card_payment">Оплата картой</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="components-Form-FormField___self___10VZD">
+                                    <div class="form-group boolean optional customer_display_on_all">
+                                        <div class="checkbox check-success">
                                             <input class="boolean optional" type="checkbox" value="" name="add_discount" id="add_discount_event">
                                             <label class="boolean optional" for="add_discount_event">Добавить скидку</label>
                                         </div>

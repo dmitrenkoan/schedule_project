@@ -96,6 +96,7 @@
                                     <th><a >Заработок</a></th>
                                     <th><a >Статус события</a></th>
                                     <th><a >Клиент</a></th>
+                                    <th><a >Оплата</a></th>
                                     <th><a >Дата начала собатия</a></th>
                                     <th><a >Дата окончания собатия</a></th>
                                 </tr>
@@ -122,6 +123,7 @@
                                         <td>{{$profit != NULL ? $profit.' грн': ''}}</td>
                                         <td>{{$arStatusName[$arReport->status]}}</td>
                                         <td>{{$arReport->client_name}}</td>
+                                        <td>{{$arReport->card_payment == 'N' ? 'Наличные': 'Картой'}}</td>
                                         <td>{{$arReport->date_time_begin}}</td>
                                         <td>{{$arReport->date_time_end}}</td>
                                     </tr>

@@ -287,5 +287,20 @@ $('body').on('change', '#add_discount_event' , function() {
     }
 });
 
+function calcNumberFromPercent(sumID, curObject, targetID)
+{
+    var result;
+    console.log('1111');
+    result = ($('#' + sumID).val() * curObject.val())/100;
+    $('#' + targetID).val(result);
+}
+
+function calcPercentFromNumber(sumID, curObject, targetID)
+{
+    var result;
+    result = (curObject.val()/$('#' + sumID).val())*100;
+    $('#' + targetID).val(result);
+}
+
 
 

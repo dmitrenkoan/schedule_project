@@ -102,7 +102,11 @@
                                 <th><a >Наименование</a></th>
                                 <th><a >Сотрудник</a></th>
                                 <th><a >Количество @if(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'issued') выданого @elseif(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'spent') потраченного @endif</a></th>
-                                <th><a >Остаток</a></th>
+                                <th>
+                                    <a >
+                                        @if(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'issued') Остаток на складе @elseif(!empty($arInput['inventory_action']) && $arInput['inventory_action'] == 'spent') Остаток у сотрудника @endif
+                                    </a>
+                                </th>
                                 <th><a >Дата выдачи</a></th>
                             </tr>
                             </thead>
@@ -112,8 +116,8 @@
                                 <tr class="clickable-row">
                                     <td>{{$arReport->inventory_name}}</td>
                                     <td>{{$arReport->staff_name}}</td>
-                                    <td>{{$arReport->quantity}} {{$arReport->unit_type}}</td>
-                                    <td>{{$arReport->quantity_left}} {{$arReport->unit_type}}</td>
+                                    <td>{{$arReport->quantity}} {{$arReport->unit_short_name}}</td>
+                                    <td>{{$arReport->quantity_left}} {{$arReport->unit_short_name}}</td>
                                     <td>{{$arReport->created_at}}</td>
                                 </tr>
                             @endforeach

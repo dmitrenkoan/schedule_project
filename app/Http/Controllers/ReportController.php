@@ -41,10 +41,10 @@ class ReportController extends Controller
             if($request->inventory_action == 'issued') {
 
                 $arInventoryTransfer = DB::table('inventory_transfer')
-                    ->join('inventory', 'inventory.id' , '=' , 'inventory_transfer.inventory_id')
+                    /*->join('inventory', 'inventory.id' , '=' , 'inventory_transfer.inventory_id')
                     ->join('unit_type', 'unit_type.id' , '=' , 'inventory.unit_type_id')
-                    ->join('staff', 'staff.id' , '=' , 'inventory_transfer.staff_id')
-                    ->where('staff.salons_id', $curUser['salon_id'])
+                    ->join('staff', 'staff.id' , '=' , 'inventory_transfer.staff_id')*/
+                    ->where('salons_id', $curUser['salon_id'])
                 ;
 
                 $arInventoryTransfer = $arInventoryTransfer->where('inventory_transfer.created_at', '>=',$request->date_begin)
@@ -56,14 +56,17 @@ class ReportController extends Controller
                     $arInventoryTransfer = $arInventoryTransfer->where('inventory_transfer.inventory_id', $request->inventory_id);
                 }
 
-                $result = $arInventoryTransfer->select('inventory_transfer.*', 'inventory.name as inventory_name', 'unit_type.short_name as unit_type', 'staff.name as staff_name')->get()->toArray();
+                $result = $arInventoryTransfer
+                    //->select('inventory_transfer.*', 'inventory.name as inventory_name', 'unit_type.short_name as unit_type', 'staff.name as staff_name')
+                    ->get()
+                    ->toArray();
             }
             elseif($request->inventory_action == 'spent') {
                 $arInventoryTransfer = DB::table('staff_inventory_transfer')
-                    ->join('inventory' , 'inventory.id', '=', 'staff_inventory_transfer.inventory_id')
+                    /*->join('inventory' , 'inventory.id', '=', 'staff_inventory_transfer.inventory_id')
                     ->join('staff', 'staff.id' , '=' , 'staff_inventory_transfer.staff_id')
-                    ->join('unit_type', 'unit_type.id' , '=' , 'inventory.unit_type_id')
-                    ->where('staff.salons_id', $curUser['salon_id'])
+                    ->join('unit_type', 'unit_type.id' , '=' , 'inventory.unit_type_id')*/
+                    ->where('salons_id', $curUser['salon_id'])
                     ;
 
                 $arInventoryTransfer = $arInventoryTransfer
@@ -76,7 +79,10 @@ class ReportController extends Controller
                 if(!empty($request->inventory_id)){
                     $arInventoryTransfer = $arInventoryTransfer->where('staff_inventory_transfer.inventory_id', $request->inventory_id);
                 }
-                $result = $arInventoryTransfer->select('staff_inventory_transfer.*', 'inventory.name as inventory_name', 'unit_type.short_name as unit_type', 'staff.name as staff_name')->get()->toArray();
+                $result = $arInventoryTransfer
+                    //->select('staff_inventory_transfer.*', 'inventory.name as inventory_name', 'unit_type.short_name as unit_type', 'staff.name as staff_name')
+                    ->get()
+                    ->toArray();
             }
 
 

@@ -103,12 +103,18 @@ class StaffController extends Controller
                 $obStore->quantity = $obStore->quantity - $request->quantity;
                 if($obStore->save()){
                     $curUser = Auth::user()->toArray();
+                    $staff = StaffModel::find($request->staff_id)->first();
+                    $unit = DB::table('unit_type')->find($obStore->unit_type_id);
                     $obTransferHistory = new InventoryTransfer();
+                    $obTransferHistory->staff_name = $staff->name;
+                    $obTransferHistory->inventory_name = $obStore->name;
+                    $obTransferHistory->inventory_price = $obStore->unit_price;
                     $obTransferHistory->quantity = $request->quantity;
                     $obTransferHistory->staff_id = $request->staff_id;
                     $obTransferHistory->inventory_id = $obStore->id;
-                    $obTransferHistory->user_id = $curUser['id'];
+                    $obTransferHistory->salons_id = $curUser['salon_id'];
                     $obTransferHistory->quantity_left = $obStore->quantity;
+                    $obTransferHistory->unit_short_name = $unit->short_name;
                     $obTransferHistory->save();
                 }
 

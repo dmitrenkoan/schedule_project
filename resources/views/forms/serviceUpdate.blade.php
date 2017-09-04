@@ -53,16 +53,35 @@
                                                 <label class="components-Form-FormField___label___1NQ5t" for="price">Цена</label>
                                                 <div class="components-Input-Input___self___2cl9W">
                                                     <div class="components-Input-Input___container___2dCSs">
-                                                        <input type="text" name="price" class="components-Input-Input___input___1fuFB" placeholder="" value="{{$obService->price}}">
+                                                        <input type="text" id="service_price_update" name="price" class="components-Input-Input___input___1fuFB" placeholder="" value="{{$obService->price}}">
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="components-Form-FormField___self___10VZD">
                                                 <label class="components-Form-FormField___label___1NQ5t" for="price">Оплата сотруднику</label>
-                                                <div class="components-Input-Input___self___2cl9W">
-                                                    <div class="components-Input-Input___container___2dCSs">
-                                                        <input type="text" name="worker_payment" class="components-Input-Input___input___1fuFB" placeholder="" value="{{$obService->worker_payment}}">
+                                                <div class="row service-pricing-level">
+
+                                                    <div class="col-sm-6 col-xs-4 col-sm-4">
+                                                        <label class="components-Form-FormField___label___1NQ5t" for="worker_payment_percent">
+                                                            % стоимости
+                                                        </label>
+                                                        <div class="components-Input-Input___self___2cl9W">
+                                                            <div class="components-Input-Input___container___2dCSs">
+                                                                <input type="text" name="worker_payment_percent" id="worker_payment_percent_update" onChange="calcNumberFromPercent('service_price_update', $(this), 'worker_payment_update');" class="components-Input-Input___input___1fuFB" placeholder="" value="{{ !empty($obService->price) & !empty($obService->worker_payment)? ($obService->worker_payment/$obService->price)*100: ''}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 col-xs-4 col-sm-4">
+                                                        <label class="components-Form-FormField___label___1NQ5t" for="worker_payment_percent">
+                                                            Значение
+                                                        </label>
+                                                        <div class="components-Input-Input___self___2cl9W">
+                                                            <div class="components-Input-Input___container___2dCSs">
+                                                                <input type="text" name="worker_payment" id="worker_payment_update" onChange="calcPercentFromNumber('service_price_update', $(this), 'worker_payment_percent_update');" class="components-Input-Input___input___1fuFB" placeholder="" value="{{$obService->worker_payment}}">
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>

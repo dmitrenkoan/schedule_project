@@ -18,6 +18,7 @@ use Validator;
 use App\StaffInventoryTransfer;
 use App\InventaryModel;
 use App\CalendarEventLog;
+use App\StaffModel;
 
 
 
@@ -234,6 +235,9 @@ class CalendarController extends Controller
             }
             $obCalendar->status = "AC";
             $obCalendar->note = $request->discount_note;
+            if(!empty($request->card_payment)) {
+                $obCalendar->card_payment = 'Y';
+            }
 
 
             if($obCalendar->save()) {
@@ -273,21 +277,40 @@ class CalendarController extends Controller
      $obCalendarEventLog->service_name = $obService->name;
      $obCalendarEventLog->expenses = $expenses;
      $obCalendarEventLog->worker_payment = $obService->worker_payment;
-     $obCalendarEventLog->staff_name = $staffInfo->name;
-     $obCalendarEventLog->client_name = $clientInfo->name;
+     if(!empty($staffInfo->name)) {
+         $obCalendarEventLog->staff_name = $staffInfo->name;
+     }
+     else {
+         $obCalendarEventLog->staff_name = 'unknown';
+     }
+     if(!empty($clientInfo->name)) {
+         $obCalendarEventLog->client_name = $clientInfo->name;
+     }
+     else {
+         $obCalendarEventLog->client_name = 'unknown';
+     }
      $obCalendarEventLog->save();
     }
 
     protected function staffInventoryDecreaseLog($obServiceInventory, $obStaffInventory)
     {
+        $curUser = Auth::user()->toArray();
         $inventory = InventaryModel::find($obStaffInventory->inventory_id)->first();
+        $staff = StaffModel::find($obStaffInventory->staff_id)->first();
+        $service = ServicesModel::find($obServiceInventory->service_id)->first();
+        $unit = DB::table('unit_type')->find($inventory->unit_type_id);
         $obTransferLog = new StaffInventoryTransfer();
-        $obTransferLog->staff_id = $obStaffInventory->staff_id;
-        $obTransferLog->service_id = $obServiceInventory->service_id;
+        $obTransferLog->staff_name = $staff->name;
+        $obTransferLog->service_name = $service->name;
         $obTransferLog->quantity = $obServiceInventory->quantity;
         $obTransferLog->quantity_left = $obStaffInventory->quantity;
-        $obTransferLog->inventory_id = $obStaffInventory->inventory_id;
+        $obTransferLog->inventory_name = $inventory->name;
         $obTransferLog->inventory_price = $inventory->unit_price;
+        $obTransferLog->inventory_id = $obStaffInventory->inventory_id;
+        $obTransferLog->staff_id = $obStaffInventory->staff_id;
+        $obTransferLog->service_id = $obServiceInventory->service_id;
+        $obTransferLog->salons_id = $curUser['salon_id'];
+        $obTransferLog->unit_short_name = $unit->short_name;
         $obTransferLog->save();
     }
 

@@ -57,7 +57,7 @@
 
                                                          @if(!empty($arServicesStaff[$arServiceItem->id]))
                                                              @foreach($arServicesStaff[$arServiceItem->id] as $key => $serviceStaffItemID)
-                                                                 {{($key >0)?', ':''}}{{$arStaff[$serviceStaffItemID]->name}}
+                                                                 {{($key >0)?', ':''}}{{!empty($arStaff[$serviceStaffItemID]->name) ? $arStaff[$serviceStaffItemID]->name : ''}}
                                                              @endforeach
                                                             @endif
                                                         </a>
@@ -183,17 +183,37 @@
                                                         <div class="components-Form-FormField___self___10VZD">
                                                             <label class="components-Form-FormField___label___1NQ5t" for="price">Цена</label>
                                                             <div class="components-Input-Input___self___2cl9W">
+
                                                                 <div class="components-Input-Input___container___2dCSs">
-                                                                    <input type="text" name="price" class="components-Input-Input___input___1fuFB" placeholder="">
+                                                                    <input type="text" name="price" id="service_price" class="components-Input-Input___input___1fuFB" placeholder="">
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class="components-Form-FormField___self___10VZD">
                                                             <label class="components-Form-FormField___label___1NQ5t" for="price">Оплата сотруднику</label>
-                                                            <div class="components-Input-Input___self___2cl9W">
-                                                                <div class="components-Input-Input___container___2dCSs">
-                                                                    <input type="text" name="worker_payment" class="components-Input-Input___input___1fuFB" placeholder="">
+                                                            <div class="row service-pricing-level">
+
+                                                                <div class="col-sm-6 col-xs-4 col-sm-4">
+                                                                    <label class="components-Form-FormField___label___1NQ5t" for="worker_payment_percent">
+                                                                        % стоимости
+                                                                    </label>
+                                                                    <div class="components-Input-Input___self___2cl9W">
+                                                                        <div class="components-Input-Input___container___2dCSs">
+                                                                            <input type="text" name="worker_payment_percent" id="worker_payment_percent" onChange="calcNumberFromPercent('service_price', $(this), 'worker_payment');" class="components-Input-Input___input___1fuFB" placeholder="">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6 col-xs-4 col-sm-4">
+                                                                    <label class="components-Form-FormField___label___1NQ5t" for="worker_payment_percent">
+                                                                        Значение
+                                                                    </label>
+                                                                    <div class="components-Input-Input___self___2cl9W">
+                                                                        <div class="components-Input-Input___container___2dCSs">
+                                                                            <input type="text" name="worker_payment" id="worker_payment" onChange="calcPercentFromNumber('service_price', $(this), 'worker_payment_percent');" class="components-Input-Input___input___1fuFB" placeholder="">
+                                                                        </div>
+                                                                    </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
