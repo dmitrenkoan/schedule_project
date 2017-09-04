@@ -292,11 +292,11 @@ class CalendarController extends Controller
      $obCalendarEventLog->save();
     }
 
-    protected function staffInventoryDecreaseLog($obServiceInventory, $obStaffInventory)
+    protected function staffInventoryDecreaseLog($obServiceInventory, $obStaffInventory, $staffID)
     {
         $curUser = Auth::user()->toArray();
         $inventory = InventaryModel::find($obStaffInventory->inventory_id)->first();
-        $staff = StaffModel::find($obStaffInventory->staff_id)->first();
+        $staff = StaffModel::find($staffID);
         $service = ServicesModel::find($obServiceInventory->service_id)->first();
         $unit = DB::table('unit_type')->find($inventory->unit_type_id);
         $obTransferLog = new StaffInventoryTransfer();
@@ -333,7 +333,7 @@ class CalendarController extends Controller
         $newObStaffInventory = StaffInventory::find($obStaffInventory->id);
         $newObStaffInventory->quantity = $obStaffInventory->quantity - $obServiceInventory->quantity;
         if($newObStaffInventory->save()) {
-            $this->staffInventoryDecreaseLog($obServiceInventory, $newObStaffInventory);
+            $this->staffInventoryDecreaseLog($obServiceInventory, $newObStaffInventory, $staffID);
             return true;
         }
         else {
