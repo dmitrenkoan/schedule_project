@@ -12,23 +12,23 @@
         <div class="bg-pic">
             <div class="bg-caption pull-bottom sm-pull-bottom text-white p-l-20 m-b-20">
                 <h2 class="semi-bold text-white">
-                    Welcome to the world's first free system for Wellness and Beauty
+                    Добро пожаловать в систему управления вашим салоном
                 </h2>
                 <p class="small">
-                    © 2013-2017 Surge Ventures Inc.
+                    © 2013-{{date('Y')}}
                 </p>
             </div>
         </div>
         <div class="login-container bg-white">
 
             <div class="p-l-50 m-l-20 p-r-50 m-r-20 p-t-50 m-t-30 sm-p-l-15 sm-p-r-15 sm-p-t-35 sm-no-margin">
-                <a href="https://www.shedul.com/"><img src="login_files/shedul-full-logo-light-bg-63d8928125e4469dabc395245bcf0485bd.png" alt="Shedul full logo light bg" height="22"></a>
-                <h3>Login to your account</h3>
+                <!--<a href="https://www.shedul.com/"><img src="login_files/shedul-full-logo-light-bg-63d8928125e4469dabc395245bcf0485bd.png" alt="Shedul full logo light bg" height="22"></a>-->
+                <h3>Введите свой email</h3>
                 <!-- START Login Form -->
                 <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                     {{ csrf_field() }}
                     <div class="form-group email optional employee_email">
-                        <input id="email" type="email" placeholder="Email address" class="string email optional input-lg form-control" name="email" value="{{ old('email') }}" required autofocus>
+                        <input id="email" type="email" placeholder="Email адрес" class="string email optional input-lg form-control" name="email" value="{{ old('email') }}" required autofocus>
 
                         @if ($errors->has('email'))
                             <span class="help-block">
@@ -37,7 +37,7 @@
                         @endif
                     </div>
                     <div class="form-group password optional employee_password">
-                        <input id="password" type="password" class="password optional input-lg form-control" name="password" placeholder="Password" required>
+                        <input id="password" type="password" class="password optional input-lg form-control" name="password" placeholder="Пароль" required>
 
                         @if ($errors->has('password'))
                             <span class="help-block">
@@ -48,11 +48,11 @@
                     </div>
                     <input type="hidden" name="remember" value="Y">
 
-                    <input name="commit" value="Login to Shedul" class="btn btn-success full-width btn-lg" type="submit">
+                    <input name="commit" value="Login to Shedul" style="margin-top:10px;" class="btn btn-success full-width btn-lg" type="submit">
                     <div class="row m-b-10 m-t-40">
                         <div class="col-md-12">
                             <a class="btn btn-link" href="{{ route('password.request') }}">
-                                Unable to login?
+                                Забыли пароль?
                             </a>
                             <!--<a target="_blank" href="https://shedul.uservoice.com/">Visit Shedul support centre</a>-->
                         </div>
