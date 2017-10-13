@@ -277,6 +277,7 @@ class CalendarController extends Controller
      $obCalendarEventLog->service_name = $obService->name;
      $obCalendarEventLog->expenses = $expenses;
      $obCalendarEventLog->worker_payment = $obService->worker_payment;
+     $obCalendarEventLog->clients_id = $clientInfo->id;
      if(!empty($staffInfo->name)) {
          $obCalendarEventLog->staff_name = $staffInfo->name;
      }
