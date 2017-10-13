@@ -140,6 +140,7 @@ return [
          * Laravel Framework Service Providers...
          */
         Illuminate\Auth\AuthServiceProvider::class,
+
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
@@ -161,12 +162,17 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        /**
+         * SleepingOwl Service Provider
+         */
+        //SleepingOwl\Admin\Providers\SleepingOwlServiceProvider::class,
 
+        //Dwij\Laraadmin\LAProvider::class,
         /*
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-
+        TCG\Voyager\VoyagerServiceProvider::class,
         /*
          * Application Service Providers...
          */
