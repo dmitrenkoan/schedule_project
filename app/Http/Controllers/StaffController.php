@@ -18,26 +18,10 @@ class StaffController extends Controller
         $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
 
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
 
+        $arSubMenu = MenuController::getMenu('menu_sub', $curRoute, 'staff');
 
-        $arSubMenu = DB::table('menu_sub')->where('group', "staff")->orderBy('sort')->get()->toArray();
-        foreach($arSubMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arSubMenu[$key]->active = "Y";
-            }
-            else {
-                $arSubMenu[$key]->active = "N";
-            }
-        }
         $obStaff = new StaffModel();
         $curUser = Auth::user()->toArray();
         $arStaff = $obStaff->where('salons_id' , $curUser['salon_id'])->paginate(20);
@@ -136,15 +120,8 @@ class StaffController extends Controller
     public function InventoryShow($id , Request $request) {
         $curRoute = '/'.$request->path();
 
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
+
         $obStaff = StaffModel::where('id' , $id)->first();
         $arStaffInventory = DB::table('staff_inventory')
             ->where('staff_inventory.staff_id' , $id)

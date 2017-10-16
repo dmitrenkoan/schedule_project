@@ -15,24 +15,10 @@ class ReportController extends Controller
         $curUser = Auth::user()->toArray();
         $curRoute = '/'.$request->path();
 
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
-        $arSubMenu = DB::table('menu_sub')->where('group', "reports")->orderBy('sort')->get()->toArray();
-        foreach($arSubMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arSubMenu[$key]->active = "Y";
-            }
-            else {
-                $arSubMenu[$key]->active = "N";
-            }
-        }
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
+        $arSubMenu = MenuController::getMenu('menu_sub', $curRoute, 'reports');
+
+
 
         $arStaff = DB::table('staff')->where('salons_id', $curUser['salon_id'])->orderBy('name', 'asc')->get()->toArray();
         $arInventory = DB::table('inventory')->where('salons_id', $curUser['salon_id'])->orderBy('name', 'asc')->get()->toArray();
@@ -109,24 +95,9 @@ class ReportController extends Controller
         $curUser = Auth::user()->toArray();
         $curRoute = '/'.$request->path();
 
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
-        $arSubMenu = DB::table('menu_sub')->where('group', "reports")->orderBy('sort')->get()->toArray();
-        foreach($arSubMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arSubMenu[$key]->active = "Y";
-            }
-            else {
-                $arSubMenu[$key]->active = "N";
-            }
-        }
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
+
+        $arSubMenu = MenuController::getMenu('menu_sub', $curRoute, 'reports');
 
         $arStaff = DB::table('staff')->where('salons_id', $curUser['salon_id'])->orderBy('name', 'asc')->get()->toArray();
 

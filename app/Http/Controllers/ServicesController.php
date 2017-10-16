@@ -18,15 +18,7 @@ class ServicesController extends Controller
         $arServicesStaff = array();
         $pageTitle = \App\Title::getCurTitle();
         $curRoute = '/'.$request->path();
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
 
         $obServices = new ServicesModel();
         $curUser = Auth::user()->toArray();

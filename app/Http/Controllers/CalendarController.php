@@ -33,15 +33,7 @@ class CalendarController extends Controller
         $arJSData = array();
         $curStaffID = NULL;
         $curRoute = '/'.$request->path();
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
         $curUser = Auth::user()->toArray();
         $arStaff = DB::table('staff')->where('salons_id' , $curUser['salon_id'])->orderBy('name')->get()->toArray();
         if(!empty($request->staff_id)) {

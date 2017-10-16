@@ -17,16 +17,7 @@ class ClientsController extends Controller
         $pageTitle = \App\Title::getCurTitle();
         //dd(config('debug'));
         $curRoute = '/'.$request->path();
-        $arMainMenu = DB::table('menu_main')->orderBy('sort')->get()->toArray();
-        foreach($arMainMenu as  $key => $MenuItem) {
-            if($MenuItem->link == $curRoute) {
-                $arMainMenu[$key]->active = "Y";
-            }
-            else {
-                $arMainMenu[$key]->active = "N";
-            }
-        }
-
+        $arMainMenu = MenuController::getMenu('menu_main', $curRoute);
         $obClients = new Clients();
         $curUser = Auth::user()->toArray();
         $arClients = $obClients->where('salons_id' , $curUser['salon_id'])->paginate(20);
