@@ -80,7 +80,7 @@
 
 
         <div class="components-Inventory-components-Index___container___Fqh7F">
-
+ 
             @if(!empty($arResult))
                 <div class="row m-t-20 clearfix">
                     <div class="col-sm-12 col-md-12 col-lg-12" id="customers_list"><div class="table-responsive">
@@ -123,7 +123,7 @@
                                         <td>{{$profit != NULL ? $profit.' грн': ''}}</td>
                                         <td>{{$arStatusName[$arReport->status]}}</td>
                                         <td>{{$arReport->client_name}}</td>
-                                        <td>{{$arReport->card_payment == 'N' ? 'Наличные': 'Картой'}}</td>
+                                        <td>{{$arReport->payment!= NULL ? $arPaymentName[$arReport->payment]  : ''}}</td>
                                         <td>{{$arReport->date_time_begin}}</td>
                                         <td>{{$arReport->date_time_end}}</td>
                                     </tr>

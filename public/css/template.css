@@ -83,5 +83,11 @@
 .clickable-row.WA td{
     background-color: rgba(161, 161, 249, 0.66);
 }
+.margin-top {
+    margin-top: 5px;
+}
+.full-width-popup {
+    width: 100%;
+}
 
 

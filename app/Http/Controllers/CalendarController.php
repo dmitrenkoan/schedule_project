@@ -186,10 +186,19 @@ class CalendarController extends Controller
     {
         $calendar = new CalendarModel();
         $obCalendar = $calendar->find($id);
+        $obClient = Clients::with('bonus')->find($obCalendar->clients_id);
         $obService = DB::table('services')->where('id', $obCalendar->services_id)->first();
+        if(!empty($obClient->bonus->balance) && $obClient->bonus->balance>=$obService->price) {
+            $canPayBonus = "Y";
+        }
+        else {
+            $canPayBonus = "N";
+        }
         return view('forms.eventConfirm', [
             "obCalendar" => $obCalendar,
             "obService" => $obService,
+            "obClient" => $obClient,
+            'canPayBonus' => $canPayBonus,
         ]);
     }
 
@@ -225,12 +234,19 @@ class CalendarController extends Controller
             if($discount > 0) {
                 $obCalendar->discount = $discount;
             }
-            $obCalendar->status = "AC";
-            $obCalendar->note = $request->discount_note;
-            if(!empty($request->card_payment)) {
-                $obCalendar->card_payment = 'Y';
+            if(!empty($request->bonus_pay)) {
+                $obCalendar->payment = 'bonus';
+                $obBonus = new ClientsController();
+                $obBonus->reduceBonus($obCalendar->clients_id, $obService->price, 'reduce');
+            }
+            elseif($request->card_payment) {
+                $obCalendar->payment = 'card';
+            } else {
+                $obCalendar->payment = 'cash';
             }
 
+            $obCalendar->status = "AC";
+            $obCalendar->note = $request->discount_note;
 
             if($obCalendar->save()) {
                 $this->calendarEventLog($obService, $obCalendar, $expenses);

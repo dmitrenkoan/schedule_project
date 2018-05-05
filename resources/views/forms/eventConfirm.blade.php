@@ -55,6 +55,21 @@
                                     </div>
                                 </div>
 
+                                <div class="components-Form-FormField___self___10VZD">
+                                    <div class="form-group boolean optional customer_display_on_all">
+                                        <div class="checkbox @if($canPayBonus == "Y")check-success @else disabled @endif">
+
+                                            <input class="boolean optional" type="checkbox" @if($canPayBonus == "N") disabled @endif value="Y" name="bonus_pay" id="bonus_pay">
+
+                                            <label class="boolean optional disabled" for="bonus_pay" >Оплата бонусами</label>
+                                            <div class="description">
+                                                <p>Необоходимое количество бонусов: {{$obService->price}}</p>
+                                                <p>Текущее количество бонусов: {{$obClient->bonus->balance}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
 
                             </div>

@@ -1,7 +1,7 @@
 <div class="components-Modal-Modal___container___3mETe components-Modal-Modal___large___28vxo">
     <div class="components-Loader-Loader___self___sERCy">
         <div class="components-Loader-Loader___children___1nSg3">
-            <div class="components-Modal-Header___self___3YXP4">Новый клиент</div>
+            <div class="components-Modal-Header___self___3YXP4">Клиент: {{$client->name}}</div>
             <div class="components-Modal-Content___self___1m6Do"><div>
                     <div class="components-Form-FormGroup___self___tyZ1F">
                         <div class="components-Form-FormGroup___flex___3Lzrh">
@@ -41,6 +41,41 @@
                                                         <input type="radio" value="Ж" name="sex" id="customer_gender_female_update" {{$client->sex == "Ж" ? "checked" : ''}}>
                                                         <label class="collection_radio_buttons" for="customer_gender_female_update">Женщина</label></span>
                                     </div>
+                                </div>
+
+                                <div class="components-Form-FormField___self___10VZD">
+                                    <label class="components-Form-FormField___label___1NQ5t" >Бонусы</label>
+                                    <div class="components-Input-Input___self___2cl9W">
+                                        <div class="components-Input-Input___container___2dCSs">
+                                            <input disabled class="components-Input-Input___input___1fuFB" placeholder="" value="{{!empty($client->bonus->balance) ? $client->bonus->balance: 0}}">
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class=" margin-top">
+                                        <button class="btn btn-success js-add-shift" id="add_client_bonus" data-action="show">Добавить</button>
+                                        <div class="add-bonus" style="display:none">
+                                            <div class="components-Input-Input___container___2dCSs ">
+                                                <label class="components-Form-FormField___label___1NQ5t" for="add_bonus_value">Количество</label>
+                                                <input id="add_bonus_value" name="add_bonus_value" class="components-Input-Input___input___1fuFB" placeholder="" value="">
+                                                <label class="components-Form-FormField___label___1NQ5t " for="add_bonus_value_comment">Коментарий</label>
+                                                <textarea class="full-width-popup" name="add_bonus_value_comment"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" margin-top">
+                                        <button class="btn btn-danger js-add-shift" id="reduce_client_bonus" data-action="show">Списать</button>
+                                        <div class="reduce-bonus" style="display:none">
+                                            <div class="components-Input-Input___container___2dCSs ">
+                                                <label class="components-Form-FormField___label___1NQ5t" for="reduce_bonus_value">Количество</label>
+                                                <input id="reduce_bonus_value" name="reduce_bonus_value" class="components-Input-Input___input___1fuFB" placeholder="" value="">
+                                                <label class="components-Form-FormField___label___1NQ5t" for="reduce_bonus_value_comment">Коментарий</label>
+                                                <textarea class="full-width-popup" name="reduce_bonus_value_comment"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             </div>

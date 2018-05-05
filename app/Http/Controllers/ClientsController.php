@@ -9,6 +9,8 @@ use DB;
 use Illuminate\Support\Facades\App;
 use DateTime;
 use App\Title;
+use App\ClientBonus;
+use App\BonusEventLog;
 
 
 class ClientsController extends Controller
@@ -50,8 +52,10 @@ class ClientsController extends Controller
     }
     public function updateForm($id) {
         $curUser = Auth::user()->toArray();
-        $client = DB::table('clients')->where('salons_id', $curUser['salon_id'])->where('id', $id)->first();
-        //dd($client);
+
+        $client = Clients::with('bonus')->where('salons_id', $curUser['salon_id'])->where('id', $id)->first();
+        //$client = DB::table('clients')->with('bonus')->where('salons_id', $curUser['salon_id'])->where('id', $id)->first();
+        //dd($client->bonus);
         $arBirtday = array(
             'month' => '',
             'day' => '',
@@ -95,12 +99,59 @@ class ClientsController extends Controller
         if(!empty($request->birthday_month) && !empty($request->birthday_day)) {
             $obClient->birthday = date('Y').'-'.$request->birthday_month.'-'.$request->birthday_day;
         }
+        if(!empty($request->add_bonus_value) || !empty($request->reduce_bonus_value)) {
+            if(!empty($request->add_bonus_value)) {
+                $value = $request->add_bonus_value;
+                $action = 'add';
+                $comment = $request->add_bonus_value_comment;
+            } else {
+                $value = $request->reduce_bonus_value;
+                $action = 'reduce';
+                $comment = $request->reduce_bonus_value_comment;
+            }
+
+            $this->reduceBonus($id, $value, $action, $comment);
+
+        }
+
+
         $obClient->save();
 
         return view('layouts.customersUpdate', [
             'obClient' => $obClient,
         ]);
 
+    }
+
+    public function reduceBonus($id, $quantity, $action = 'reduce', $comment = '') {
+        $bonusEvent = new BonusEventLog();
+        $clientBonus = ClientBonus::where('clients_id', $id)->first();
+        if(empty($clientBonus->id)) {
+            $clientBonus = new ClientBonus();
+        }
+        $bonusEvent->clients_id = $id;
+        $clientBonus->clients_id = $id;
+        if($action == 'add') {
+            $clientBonus->balance += $quantity;
+            $bonusEvent->quantity = $quantity;
+            $bonusEvent->action = 'inc';
+            $bonusEvent->balance = $clientBonus->balance;
+            $bonusEvent->comment = $comment;
+
+        } elseif($action = 'reduce') {
+            if($clientBonus->balance - $quantity < 0) {
+                $quantity = $clientBonus->balance;
+            }
+            $clientBonus->balance -= $quantity;
+            $bonusEvent->quantity = $quantity;
+            $bonusEvent->action = 'desc';
+            $bonusEvent->balance = $clientBonus->balance;
+            $bonusEvent->comment = $comment;
+        }
+
+        $bonusEvent->save();
+        $clientBonus->save();
+        return $clientBonus->save();
     }
 
     public function delete($id) {

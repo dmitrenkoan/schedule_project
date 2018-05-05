@@ -127,6 +127,11 @@ class ReportController extends Controller
             "AC" => "Принят",
             "CA" => "Отменен",
         );
+        $arPaymentName = [
+            'card' => 'Картой',
+            'cash' => 'Наличными',
+            'bonus' => 'Бонусами'
+        ];
 
 
         return view('layouts.reportsStaff', [
@@ -143,7 +148,8 @@ class ReportController extends Controller
             'arInput' => $arInput,
             'arResult' => $result,
             'arStatusName' => $arStatusName,
-            'pageTitle' => $pageTitle
+            'pageTitle' => $pageTitle,
+            'arPaymentName' => $arPaymentName
 
         ]);
     }

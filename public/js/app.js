@@ -89,8 +89,7 @@ $('body').on('click' , '[data-type=update_submit]', function () {
     target = '#' + $(this).attr('data-insert');
     action = $(this).attr('data-action');
     $('#update_modal input, #update_modal select').each(function () {
-        //console.log($(this).prop('checked'));
-        if($(this).prop('type') == 'radio') {
+        if($(this).prop('type') == 'radio' || $(this).prop('type') == 'checkbox') {
             if($(this).prop('checked') === true) {
                 name = $(this).attr('name');
                 request[name] = $(this).val();
@@ -287,10 +286,38 @@ $('body').on('change', '#add_discount_event' , function() {
     }
 });
 
+$('body').on('click', '#add_client_bonus' , function() {
+    //console.log($(this).val(), $(this).prop('checked'));
+    var action = $(this).attr('data-action');
+    //console.log(action);
+    if(action === 'show') {
+        $(this).siblings('.add-bonus').fadeIn();
+        $(this).attr('data-action', 'hide');
+    }
+    else {
+        $(this).siblings('.add-bonus').fadeOut();
+        $(this).attr('data-action', 'show');
+    }
+});
+
+$('body').on('click', '#reduce_client_bonus' , function() {
+    //console.log($(this).val(), $(this).prop('checked'));
+    var action = $(this).attr('data-action');
+    //console.log(action);
+    if(action === 'show') {
+        $(this).siblings('.reduce-bonus').fadeIn();
+        $(this).attr('data-action', 'hide');
+    }
+    else {
+        $(this).siblings('.reduce-bonus').fadeOut();
+        $(this).attr('data-action', 'show');
+    }
+});
+
+
 function calcNumberFromPercent(sumID, curObject, targetID)
 {
     var result;
-    console.log('1111');
     result = ($('#' + sumID).val() * curObject.val())/100;
     $('#' + targetID).val(result);
 }
